@@ -1,0 +1,11 @@
+transformers==4.57.1
+sentencepiece==0.2.1
+datasets==4.0.0
+accelerate==1.11.0
+ninja==1.13.0
+triton==3.4.0
+
+torch==2.8.0
+numpy
+matplotlib
+tqdm

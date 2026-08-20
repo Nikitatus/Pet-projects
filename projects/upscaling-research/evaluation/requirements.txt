@@ -1,0 +1,8 @@
+torch
+torchvision
+torchmetrics[image]
+lpips
+pillow
+aura-sr
+datasets
+huggingface-hub

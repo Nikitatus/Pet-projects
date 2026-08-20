@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3x Super-Resolution Comparison Grid</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-color: #38bdf8;
+            --border-color: #334155;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 2rem;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p.subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 80px repeat(3, 1fr);
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .header-row {
+            position: sticky;
+            top: 0;
+            background-color: var(--bg-color);
+            padding: 1rem 0;
+            z-index: 100;
+            font-weight: 700;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .header-cell {
+            text-align: center;
+            color: var(--accent-color);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .image-row {
+            display: contents;
+        }
+
+        .id-cell {
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        .image-card {
+            position: relative;
+            background-color: var(--card-bg);
+            border-radius: 0.75rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            cursor: zoom-in;
+        }
+
+        .image-card:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        }
+
+        .image-card img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 0.75rem;
+            image-rendering: high-quality;
+        }
+
+        /* Modal View */
+        #modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(15, 23, 42, 0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            cursor: zoom-out;
+        }
+
+        #modal-img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 0.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease;
+        }
+
+        .footer {
+            margin-top: 4rem;
+            text-align: center;
+            color: var(--text-secondary);
+            padding: 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>3x Super-Resolution Comparison</h1>
+            <p class="subtitle">Comparing HAT, AuraSRv2, and TSD-SR model outputs</p>
+        </header>
+
+        <div class="grid">
+            <div class="header-cell">ID</div>
+            <div class="header-cell">HAT</div>
+            <div class="header-cell">AuraSRv2</div>
+            <div class="header-cell">TSD-SR</div>
+            <div class="image-row">
+                <div class="id-cell">1</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_1_3x.png')">
+                    <img src="output/HAT/3x/image_1_3x.png" alt="HAT image_1" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_1_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_1_3x.png" alt="AuraSRv2 image_1" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_1_3x.png')">
+                    <img src="output/TSD-SR/3x/image_1_3x.png" alt="TSD-SR image_1" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">2</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_2_3x.png')">
+                    <img src="output/HAT/3x/image_2_3x.png" alt="HAT image_2" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_2_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_2_3x.png" alt="AuraSRv2 image_2" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_2_3x.png')">
+                    <img src="output/TSD-SR/3x/image_2_3x.png" alt="TSD-SR image_2" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">3</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_3_3x.png')">
+                    <img src="output/HAT/3x/image_3_3x.png" alt="HAT image_3" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_3_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_3_3x.png" alt="AuraSRv2 image_3" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_3_3x.png')">
+                    <img src="output/TSD-SR/3x/image_3_3x.png" alt="TSD-SR image_3" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">4</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_4_3x.png')">
+                    <img src="output/HAT/3x/image_4_3x.png" alt="HAT image_4" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_4_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_4_3x.png" alt="AuraSRv2 image_4" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_4_3x.png')">
+                    <img src="output/TSD-SR/3x/image_4_3x.png" alt="TSD-SR image_4" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">5</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_5_3x.png')">
+                    <img src="output/HAT/3x/image_5_3x.png" alt="HAT image_5" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_5_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_5_3x.png" alt="AuraSRv2 image_5" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_5_3x.png')">
+                    <img src="output/TSD-SR/3x/image_5_3x.png" alt="TSD-SR image_5" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">6</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_6_3x.png')">
+                    <img src="output/HAT/3x/image_6_3x.png" alt="HAT image_6" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_6_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_6_3x.png" alt="AuraSRv2 image_6" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_6_3x.png')">
+                    <img src="output/TSD-SR/3x/image_6_3x.png" alt="TSD-SR image_6" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">7</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_7_3x.png')">
+                    <img src="output/HAT/3x/image_7_3x.png" alt="HAT image_7" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_7_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_7_3x.png" alt="AuraSRv2 image_7" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_7_3x.png')">
+                    <img src="output/TSD-SR/3x/image_7_3x.png" alt="TSD-SR image_7" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">8</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_8_3x.png')">
+                    <img src="output/HAT/3x/image_8_3x.png" alt="HAT image_8" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_8_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_8_3x.png" alt="AuraSRv2 image_8" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_8_3x.png')">
+                    <img src="output/TSD-SR/3x/image_8_3x.png" alt="TSD-SR image_8" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">9</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_9_3x.png')">
+                    <img src="output/HAT/3x/image_9_3x.png" alt="HAT image_9" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_9_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_9_3x.png" alt="AuraSRv2 image_9" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_9_3x.png')">
+                    <img src="output/TSD-SR/3x/image_9_3x.png" alt="TSD-SR image_9" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">10</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_10_3x.png')">
+                    <img src="output/HAT/3x/image_10_3x.png" alt="HAT image_10" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_10_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_10_3x.png" alt="AuraSRv2 image_10" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_10_3x.png')">
+                    <img src="output/TSD-SR/3x/image_10_3x.png" alt="TSD-SR image_10" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">11</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_11_3x.png')">
+                    <img src="output/HAT/3x/image_11_3x.png" alt="HAT image_11" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_11_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_11_3x.png" alt="AuraSRv2 image_11" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_11_3x.png')">
+                    <img src="output/TSD-SR/3x/image_11_3x.png" alt="TSD-SR image_11" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">12</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_12_3x.png')">
+                    <img src="output/HAT/3x/image_12_3x.png" alt="HAT image_12" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_12_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_12_3x.png" alt="AuraSRv2 image_12" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_12_3x.png')">
+                    <img src="output/TSD-SR/3x/image_12_3x.png" alt="TSD-SR image_12" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">13</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_13_3x.png')">
+                    <img src="output/HAT/3x/image_13_3x.png" alt="HAT image_13" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_13_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_13_3x.png" alt="AuraSRv2 image_13" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_13_3x.png')">
+                    <img src="output/TSD-SR/3x/image_13_3x.png" alt="TSD-SR image_13" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">14</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_14_3x.png')">
+                    <img src="output/HAT/3x/image_14_3x.png" alt="HAT image_14" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_14_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_14_3x.png" alt="AuraSRv2 image_14" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_14_3x.png')">
+                    <img src="output/TSD-SR/3x/image_14_3x.png" alt="TSD-SR image_14" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">15</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_15_3x.png')">
+                    <img src="output/HAT/3x/image_15_3x.png" alt="HAT image_15" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_15_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_15_3x.png" alt="AuraSRv2 image_15" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_15_3x.png')">
+                    <img src="output/TSD-SR/3x/image_15_3x.png" alt="TSD-SR image_15" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">16</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_16_3x.png')">
+                    <img src="output/HAT/3x/image_16_3x.png" alt="HAT image_16" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_16_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_16_3x.png" alt="AuraSRv2 image_16" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_16_3x.png')">
+                    <img src="output/TSD-SR/3x/image_16_3x.png" alt="TSD-SR image_16" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">17</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_17_3x.png')">
+                    <img src="output/HAT/3x/image_17_3x.png" alt="HAT image_17" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_17_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_17_3x.png" alt="AuraSRv2 image_17" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_17_3x.png')">
+                    <img src="output/TSD-SR/3x/image_17_3x.png" alt="TSD-SR image_17" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">18</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_18_3x.png')">
+                    <img src="output/HAT/3x/image_18_3x.png" alt="HAT image_18" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_18_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_18_3x.png" alt="AuraSRv2 image_18" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_18_3x.png')">
+                    <img src="output/TSD-SR/3x/image_18_3x.png" alt="TSD-SR image_18" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">19</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_19_3x.png')">
+                    <img src="output/HAT/3x/image_19_3x.png" alt="HAT image_19" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_19_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_19_3x.png" alt="AuraSRv2 image_19" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_19_3x.png')">
+                    <img src="output/TSD-SR/3x/image_19_3x.png" alt="TSD-SR image_19" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">20</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_20_3x.png')">
+                    <img src="output/HAT/3x/image_20_3x.png" alt="HAT image_20" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_20_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_20_3x.png" alt="AuraSRv2 image_20" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_20_3x.png')">
+                    <img src="output/TSD-SR/3x/image_20_3x.png" alt="TSD-SR image_20" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">21</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_21_3x.png')">
+                    <img src="output/HAT/3x/image_21_3x.png" alt="HAT image_21" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_21_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_21_3x.png" alt="AuraSRv2 image_21" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_21_3x.png')">
+                    <img src="output/TSD-SR/3x/image_21_3x.png" alt="TSD-SR image_21" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">22</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_22_3x.png')">
+                    <img src="output/HAT/3x/image_22_3x.png" alt="HAT image_22" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_22_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_22_3x.png" alt="AuraSRv2 image_22" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_22_3x.png')">
+                    <img src="output/TSD-SR/3x/image_22_3x.png" alt="TSD-SR image_22" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">23</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_23_3x.png')">
+                    <img src="output/HAT/3x/image_23_3x.png" alt="HAT image_23" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_23_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_23_3x.png" alt="AuraSRv2 image_23" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_23_3x.png')">
+                    <img src="output/TSD-SR/3x/image_23_3x.png" alt="TSD-SR image_23" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">24</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_24_3x.png')">
+                    <img src="output/HAT/3x/image_24_3x.png" alt="HAT image_24" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_24_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_24_3x.png" alt="AuraSRv2 image_24" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_24_3x.png')">
+                    <img src="output/TSD-SR/3x/image_24_3x.png" alt="TSD-SR image_24" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">25</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_25_3x.png')">
+                    <img src="output/HAT/3x/image_25_3x.png" alt="HAT image_25" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_25_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_25_3x.png" alt="AuraSRv2 image_25" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_25_3x.png')">
+                    <img src="output/TSD-SR/3x/image_25_3x.png" alt="TSD-SR image_25" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">26</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_26_3x.png')">
+                    <img src="output/HAT/3x/image_26_3x.png" alt="HAT image_26" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_26_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_26_3x.png" alt="AuraSRv2 image_26" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_26_3x.png')">
+                    <img src="output/TSD-SR/3x/image_26_3x.png" alt="TSD-SR image_26" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">27</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_27_3x.png')">
+                    <img src="output/HAT/3x/image_27_3x.png" alt="HAT image_27" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_27_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_27_3x.png" alt="AuraSRv2 image_27" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_27_3x.png')">
+                    <img src="output/TSD-SR/3x/image_27_3x.png" alt="TSD-SR image_27" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">28</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_28_3x.png')">
+                    <img src="output/HAT/3x/image_28_3x.png" alt="HAT image_28" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_28_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_28_3x.png" alt="AuraSRv2 image_28" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_28_3x.png')">
+                    <img src="output/TSD-SR/3x/image_28_3x.png" alt="TSD-SR image_28" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">29</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_29_3x.png')">
+                    <img src="output/HAT/3x/image_29_3x.png" alt="HAT image_29" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_29_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_29_3x.png" alt="AuraSRv2 image_29" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_29_3x.png')">
+                    <img src="output/TSD-SR/3x/image_29_3x.png" alt="TSD-SR image_29" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">30</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_30_3x.png')">
+                    <img src="output/HAT/3x/image_30_3x.png" alt="HAT image_30" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_30_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_30_3x.png" alt="AuraSRv2 image_30" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_30_3x.png')">
+                    <img src="output/TSD-SR/3x/image_30_3x.png" alt="TSD-SR image_30" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">31</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_31_3x.png')">
+                    <img src="output/HAT/3x/image_31_3x.png" alt="HAT image_31" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_31_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_31_3x.png" alt="AuraSRv2 image_31" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_31_3x.png')">
+                    <img src="output/TSD-SR/3x/image_31_3x.png" alt="TSD-SR image_31" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">32</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_32_3x.png')">
+                    <img src="output/HAT/3x/image_32_3x.png" alt="HAT image_32" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_32_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_32_3x.png" alt="AuraSRv2 image_32" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_32_3x.png')">
+                    <img src="output/TSD-SR/3x/image_32_3x.png" alt="TSD-SR image_32" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">33</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_33_3x.png')">
+                    <img src="output/HAT/3x/image_33_3x.png" alt="HAT image_33" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_33_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_33_3x.png" alt="AuraSRv2 image_33" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_33_3x.png')">
+                    <img src="output/TSD-SR/3x/image_33_3x.png" alt="TSD-SR image_33" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">34</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_34_3x.png')">
+                    <img src="output/HAT/3x/image_34_3x.png" alt="HAT image_34" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_34_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_34_3x.png" alt="AuraSRv2 image_34" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_34_3x.png')">
+                    <img src="output/TSD-SR/3x/image_34_3x.png" alt="TSD-SR image_34" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">35</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_35_3x.png')">
+                    <img src="output/HAT/3x/image_35_3x.png" alt="HAT image_35" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_35_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_35_3x.png" alt="AuraSRv2 image_35" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_35_3x.png')">
+                    <img src="output/TSD-SR/3x/image_35_3x.png" alt="TSD-SR image_35" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">36</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_36_3x.png')">
+                    <img src="output/HAT/3x/image_36_3x.png" alt="HAT image_36" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_36_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_36_3x.png" alt="AuraSRv2 image_36" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_36_3x.png')">
+                    <img src="output/TSD-SR/3x/image_36_3x.png" alt="TSD-SR image_36" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">37</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_37_3x.png')">
+                    <img src="output/HAT/3x/image_37_3x.png" alt="HAT image_37" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_37_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_37_3x.png" alt="AuraSRv2 image_37" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_37_3x.png')">
+                    <img src="output/TSD-SR/3x/image_37_3x.png" alt="TSD-SR image_37" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">38</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_38_3x.png')">
+                    <img src="output/HAT/3x/image_38_3x.png" alt="HAT image_38" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_38_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_38_3x.png" alt="AuraSRv2 image_38" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_38_3x.png')">
+                    <img src="output/TSD-SR/3x/image_38_3x.png" alt="TSD-SR image_38" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">39</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_39_3x.png')">
+                    <img src="output/HAT/3x/image_39_3x.png" alt="HAT image_39" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_39_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_39_3x.png" alt="AuraSRv2 image_39" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_39_3x.png')">
+                    <img src="output/TSD-SR/3x/image_39_3x.png" alt="TSD-SR image_39" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">40</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_40_3x.png')">
+                    <img src="output/HAT/3x/image_40_3x.png" alt="HAT image_40" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_40_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_40_3x.png" alt="AuraSRv2 image_40" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_40_3x.png')">
+                    <img src="output/TSD-SR/3x/image_40_3x.png" alt="TSD-SR image_40" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">41</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_41_3x.png')">
+                    <img src="output/HAT/3x/image_41_3x.png" alt="HAT image_41" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_41_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_41_3x.png" alt="AuraSRv2 image_41" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_41_3x.png')">
+                    <img src="output/TSD-SR/3x/image_41_3x.png" alt="TSD-SR image_41" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">42</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_42_3x.png')">
+                    <img src="output/HAT/3x/image_42_3x.png" alt="HAT image_42" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_42_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_42_3x.png" alt="AuraSRv2 image_42" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_42_3x.png')">
+                    <img src="output/TSD-SR/3x/image_42_3x.png" alt="TSD-SR image_42" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">43</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_43_3x.png')">
+                    <img src="output/HAT/3x/image_43_3x.png" alt="HAT image_43" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_43_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_43_3x.png" alt="AuraSRv2 image_43" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_43_3x.png')">
+                    <img src="output/TSD-SR/3x/image_43_3x.png" alt="TSD-SR image_43" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">44</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_44_3x.png')">
+                    <img src="output/HAT/3x/image_44_3x.png" alt="HAT image_44" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_44_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_44_3x.png" alt="AuraSRv2 image_44" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_44_3x.png')">
+                    <img src="output/TSD-SR/3x/image_44_3x.png" alt="TSD-SR image_44" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">45</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_45_3x.png')">
+                    <img src="output/HAT/3x/image_45_3x.png" alt="HAT image_45" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_45_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_45_3x.png" alt="AuraSRv2 image_45" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_45_3x.png')">
+                    <img src="output/TSD-SR/3x/image_45_3x.png" alt="TSD-SR image_45" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">46</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_46_3x.png')">
+                    <img src="output/HAT/3x/image_46_3x.png" alt="HAT image_46" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_46_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_46_3x.png" alt="AuraSRv2 image_46" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_46_3x.png')">
+                    <img src="output/TSD-SR/3x/image_46_3x.png" alt="TSD-SR image_46" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">47</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_47_3x.png')">
+                    <img src="output/HAT/3x/image_47_3x.png" alt="HAT image_47" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_47_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_47_3x.png" alt="AuraSRv2 image_47" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_47_3x.png')">
+                    <img src="output/TSD-SR/3x/image_47_3x.png" alt="TSD-SR image_47" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">48</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_48_3x.png')">
+                    <img src="output/HAT/3x/image_48_3x.png" alt="HAT image_48" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_48_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_48_3x.png" alt="AuraSRv2 image_48" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_48_3x.png')">
+                    <img src="output/TSD-SR/3x/image_48_3x.png" alt="TSD-SR image_48" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">49</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_49_3x.png')">
+                    <img src="output/HAT/3x/image_49_3x.png" alt="HAT image_49" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_49_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_49_3x.png" alt="AuraSRv2 image_49" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_49_3x.png')">
+                    <img src="output/TSD-SR/3x/image_49_3x.png" alt="TSD-SR image_49" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">50</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_50_3x.png')">
+                    <img src="output/HAT/3x/image_50_3x.png" alt="HAT image_50" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_50_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_50_3x.png" alt="AuraSRv2 image_50" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_50_3x.png')">
+                    <img src="output/TSD-SR/3x/image_50_3x.png" alt="TSD-SR image_50" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">51</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_51_3x.png')">
+                    <img src="output/HAT/3x/image_51_3x.png" alt="HAT image_51" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_51_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_51_3x.png" alt="AuraSRv2 image_51" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_51_3x.png')">
+                    <img src="output/TSD-SR/3x/image_51_3x.png" alt="TSD-SR image_51" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">52</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_52_3x.png')">
+                    <img src="output/HAT/3x/image_52_3x.png" alt="HAT image_52" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_52_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_52_3x.png" alt="AuraSRv2 image_52" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_52_3x.png')">
+                    <img src="output/TSD-SR/3x/image_52_3x.png" alt="TSD-SR image_52" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">53</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_53_3x.png')">
+                    <img src="output/HAT/3x/image_53_3x.png" alt="HAT image_53" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_53_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_53_3x.png" alt="AuraSRv2 image_53" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_53_3x.png')">
+                    <img src="output/TSD-SR/3x/image_53_3x.png" alt="TSD-SR image_53" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">54</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_54_3x.png')">
+                    <img src="output/HAT/3x/image_54_3x.png" alt="HAT image_54" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_54_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_54_3x.png" alt="AuraSRv2 image_54" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_54_3x.png')">
+                    <img src="output/TSD-SR/3x/image_54_3x.png" alt="TSD-SR image_54" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">55</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_55_3x.png')">
+                    <img src="output/HAT/3x/image_55_3x.png" alt="HAT image_55" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_55_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_55_3x.png" alt="AuraSRv2 image_55" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_55_3x.png')">
+                    <img src="output/TSD-SR/3x/image_55_3x.png" alt="TSD-SR image_55" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">56</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_56_3x.png')">
+                    <img src="output/HAT/3x/image_56_3x.png" alt="HAT image_56" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_56_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_56_3x.png" alt="AuraSRv2 image_56" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_56_3x.png')">
+                    <img src="output/TSD-SR/3x/image_56_3x.png" alt="TSD-SR image_56" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">57</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_57_3x.png')">
+                    <img src="output/HAT/3x/image_57_3x.png" alt="HAT image_57" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_57_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_57_3x.png" alt="AuraSRv2 image_57" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_57_3x.png')">
+                    <img src="output/TSD-SR/3x/image_57_3x.png" alt="TSD-SR image_57" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">58</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_58_3x.png')">
+                    <img src="output/HAT/3x/image_58_3x.png" alt="HAT image_58" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_58_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_58_3x.png" alt="AuraSRv2 image_58" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_58_3x.png')">
+                    <img src="output/TSD-SR/3x/image_58_3x.png" alt="TSD-SR image_58" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">59</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_59_3x.png')">
+                    <img src="output/HAT/3x/image_59_3x.png" alt="HAT image_59" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_59_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_59_3x.png" alt="AuraSRv2 image_59" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_59_3x.png')">
+                    <img src="output/TSD-SR/3x/image_59_3x.png" alt="TSD-SR image_59" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">60</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_60_3x.png')">
+                    <img src="output/HAT/3x/image_60_3x.png" alt="HAT image_60" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_60_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_60_3x.png" alt="AuraSRv2 image_60" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_60_3x.png')">
+                    <img src="output/TSD-SR/3x/image_60_3x.png" alt="TSD-SR image_60" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">61</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_61_3x.png')">
+                    <img src="output/HAT/3x/image_61_3x.png" alt="HAT image_61" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_61_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_61_3x.png" alt="AuraSRv2 image_61" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_61_3x.png')">
+                    <img src="output/TSD-SR/3x/image_61_3x.png" alt="TSD-SR image_61" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">62</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_62_3x.png')">
+                    <img src="output/HAT/3x/image_62_3x.png" alt="HAT image_62" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_62_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_62_3x.png" alt="AuraSRv2 image_62" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_62_3x.png')">
+                    <img src="output/TSD-SR/3x/image_62_3x.png" alt="TSD-SR image_62" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">63</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_63_3x.png')">
+                    <img src="output/HAT/3x/image_63_3x.png" alt="HAT image_63" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_63_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_63_3x.png" alt="AuraSRv2 image_63" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_63_3x.png')">
+                    <img src="output/TSD-SR/3x/image_63_3x.png" alt="TSD-SR image_63" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">64</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_64_3x.png')">
+                    <img src="output/HAT/3x/image_64_3x.png" alt="HAT image_64" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_64_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_64_3x.png" alt="AuraSRv2 image_64" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_64_3x.png')">
+                    <img src="output/TSD-SR/3x/image_64_3x.png" alt="TSD-SR image_64" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">65</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_65_3x.png')">
+                    <img src="output/HAT/3x/image_65_3x.png" alt="HAT image_65" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_65_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_65_3x.png" alt="AuraSRv2 image_65" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_65_3x.png')">
+                    <img src="output/TSD-SR/3x/image_65_3x.png" alt="TSD-SR image_65" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">66</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_66_3x.png')">
+                    <img src="output/HAT/3x/image_66_3x.png" alt="HAT image_66" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_66_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_66_3x.png" alt="AuraSRv2 image_66" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_66_3x.png')">
+                    <img src="output/TSD-SR/3x/image_66_3x.png" alt="TSD-SR image_66" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">67</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_67_3x.png')">
+                    <img src="output/HAT/3x/image_67_3x.png" alt="HAT image_67" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_67_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_67_3x.png" alt="AuraSRv2 image_67" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_67_3x.png')">
+                    <img src="output/TSD-SR/3x/image_67_3x.png" alt="TSD-SR image_67" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">68</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_68_3x.png')">
+                    <img src="output/HAT/3x/image_68_3x.png" alt="HAT image_68" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_68_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_68_3x.png" alt="AuraSRv2 image_68" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_68_3x.png')">
+                    <img src="output/TSD-SR/3x/image_68_3x.png" alt="TSD-SR image_68" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">69</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_69_3x.png')">
+                    <img src="output/HAT/3x/image_69_3x.png" alt="HAT image_69" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_69_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_69_3x.png" alt="AuraSRv2 image_69" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_69_3x.png')">
+                    <img src="output/TSD-SR/3x/image_69_3x.png" alt="TSD-SR image_69" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">70</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_70_3x.png')">
+                    <img src="output/HAT/3x/image_70_3x.png" alt="HAT image_70" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_70_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_70_3x.png" alt="AuraSRv2 image_70" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_70_3x.png')">
+                    <img src="output/TSD-SR/3x/image_70_3x.png" alt="TSD-SR image_70" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">71</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_71_3x.png')">
+                    <img src="output/HAT/3x/image_71_3x.png" alt="HAT image_71" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_71_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_71_3x.png" alt="AuraSRv2 image_71" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_71_3x.png')">
+                    <img src="output/TSD-SR/3x/image_71_3x.png" alt="TSD-SR image_71" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">72</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_72_3x.png')">
+                    <img src="output/HAT/3x/image_72_3x.png" alt="HAT image_72" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_72_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_72_3x.png" alt="AuraSRv2 image_72" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_72_3x.png')">
+                    <img src="output/TSD-SR/3x/image_72_3x.png" alt="TSD-SR image_72" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">73</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_73_3x.png')">
+                    <img src="output/HAT/3x/image_73_3x.png" alt="HAT image_73" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_73_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_73_3x.png" alt="AuraSRv2 image_73" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_73_3x.png')">
+                    <img src="output/TSD-SR/3x/image_73_3x.png" alt="TSD-SR image_73" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">74</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_74_3x.png')">
+                    <img src="output/HAT/3x/image_74_3x.png" alt="HAT image_74" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_74_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_74_3x.png" alt="AuraSRv2 image_74" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_74_3x.png')">
+                    <img src="output/TSD-SR/3x/image_74_3x.png" alt="TSD-SR image_74" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">75</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_75_3x.png')">
+                    <img src="output/HAT/3x/image_75_3x.png" alt="HAT image_75" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_75_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_75_3x.png" alt="AuraSRv2 image_75" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_75_3x.png')">
+                    <img src="output/TSD-SR/3x/image_75_3x.png" alt="TSD-SR image_75" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">76</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_76_3x.png')">
+                    <img src="output/HAT/3x/image_76_3x.png" alt="HAT image_76" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_76_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_76_3x.png" alt="AuraSRv2 image_76" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_76_3x.png')">
+                    <img src="output/TSD-SR/3x/image_76_3x.png" alt="TSD-SR image_76" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">77</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_77_3x.png')">
+                    <img src="output/HAT/3x/image_77_3x.png" alt="HAT image_77" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_77_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_77_3x.png" alt="AuraSRv2 image_77" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_77_3x.png')">
+                    <img src="output/TSD-SR/3x/image_77_3x.png" alt="TSD-SR image_77" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">78</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_78_3x.png')">
+                    <img src="output/HAT/3x/image_78_3x.png" alt="HAT image_78" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_78_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_78_3x.png" alt="AuraSRv2 image_78" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_78_3x.png')">
+                    <img src="output/TSD-SR/3x/image_78_3x.png" alt="TSD-SR image_78" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">79</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_79_3x.png')">
+                    <img src="output/HAT/3x/image_79_3x.png" alt="HAT image_79" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_79_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_79_3x.png" alt="AuraSRv2 image_79" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_79_3x.png')">
+                    <img src="output/TSD-SR/3x/image_79_3x.png" alt="TSD-SR image_79" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">80</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_80_3x.png')">
+                    <img src="output/HAT/3x/image_80_3x.png" alt="HAT image_80" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_80_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_80_3x.png" alt="AuraSRv2 image_80" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_80_3x.png')">
+                    <img src="output/TSD-SR/3x/image_80_3x.png" alt="TSD-SR image_80" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">81</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_81_3x.png')">
+                    <img src="output/HAT/3x/image_81_3x.png" alt="HAT image_81" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_81_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_81_3x.png" alt="AuraSRv2 image_81" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_81_3x.png')">
+                    <img src="output/TSD-SR/3x/image_81_3x.png" alt="TSD-SR image_81" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">82</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_82_3x.png')">
+                    <img src="output/HAT/3x/image_82_3x.png" alt="HAT image_82" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_82_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_82_3x.png" alt="AuraSRv2 image_82" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_82_3x.png')">
+                    <img src="output/TSD-SR/3x/image_82_3x.png" alt="TSD-SR image_82" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">83</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_83_3x.png')">
+                    <img src="output/HAT/3x/image_83_3x.png" alt="HAT image_83" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_83_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_83_3x.png" alt="AuraSRv2 image_83" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_83_3x.png')">
+                    <img src="output/TSD-SR/3x/image_83_3x.png" alt="TSD-SR image_83" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">84</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_84_3x.png')">
+                    <img src="output/HAT/3x/image_84_3x.png" alt="HAT image_84" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_84_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_84_3x.png" alt="AuraSRv2 image_84" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_84_3x.png')">
+                    <img src="output/TSD-SR/3x/image_84_3x.png" alt="TSD-SR image_84" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">85</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_85_3x.png')">
+                    <img src="output/HAT/3x/image_85_3x.png" alt="HAT image_85" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_85_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_85_3x.png" alt="AuraSRv2 image_85" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_85_3x.png')">
+                    <img src="output/TSD-SR/3x/image_85_3x.png" alt="TSD-SR image_85" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">86</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_86_3x.png')">
+                    <img src="output/HAT/3x/image_86_3x.png" alt="HAT image_86" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_86_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_86_3x.png" alt="AuraSRv2 image_86" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_86_3x.png')">
+                    <img src="output/TSD-SR/3x/image_86_3x.png" alt="TSD-SR image_86" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">87</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_87_3x.png')">
+                    <img src="output/HAT/3x/image_87_3x.png" alt="HAT image_87" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_87_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_87_3x.png" alt="AuraSRv2 image_87" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_87_3x.png')">
+                    <img src="output/TSD-SR/3x/image_87_3x.png" alt="TSD-SR image_87" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">88</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_88_3x.png')">
+                    <img src="output/HAT/3x/image_88_3x.png" alt="HAT image_88" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_88_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_88_3x.png" alt="AuraSRv2 image_88" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_88_3x.png')">
+                    <img src="output/TSD-SR/3x/image_88_3x.png" alt="TSD-SR image_88" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">89</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_89_3x.png')">
+                    <img src="output/HAT/3x/image_89_3x.png" alt="HAT image_89" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_89_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_89_3x.png" alt="AuraSRv2 image_89" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_89_3x.png')">
+                    <img src="output/TSD-SR/3x/image_89_3x.png" alt="TSD-SR image_89" loading="lazy">
+                </div>
+            </div>
+            <div class="image-row">
+                <div class="id-cell">90</div>
+                <div class="image-card" onclick="openModal('output/HAT/3x/image_90_3x.png')">
+                    <img src="output/HAT/3x/image_90_3x.png" alt="HAT image_90" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/AuraSRv2/3x/image_90_3x.png')">
+                    <img src="output/AuraSRv2/3x/image_90_3x.png" alt="AuraSRv2 image_90" loading="lazy">
+                </div>
+                <div class="image-card" onclick="openModal('output/TSD-SR/3x/image_90_3x.png')">
+                    <img src="output/TSD-SR/3x/image_90_3x.png" alt="TSD-SR image_90" loading="lazy">
+                </div>
+            </div>
+
+        </div>
+
+        <div id="modal" onclick="closeModal()">
+            <img id="modal-img" src="">
+        </div>
+
+        <footer class="footer">
+            <p>&copy; 2026 AI Evaluation Suite - 3x Comparison Grid</p>
+        </footer>
+    </div>
+
+    <script>
+        const modal = document.getElementById('modal');
+        const modalImg = document.getElementById('modal-img');
+
+        function openModal(src) {
+            modalImg.src = src;
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        // Close on escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+
+</html>

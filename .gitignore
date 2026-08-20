@@ -1,0 +1,20 @@
+# OS and editor files
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.env
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Large local artifacts
+*.zip
+*.pt
+*.pth
+projects/upscaling-research/output/
+
+# Existing local-only work
+NER_and_Image_Classification/hw_02__paper_analyse__2026.ipynb

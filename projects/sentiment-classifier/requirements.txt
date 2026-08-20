@@ -1,0 +1,8 @@
+numpy >= 2.0.0
+matplotlib
+umap-learn
+torch
+datasets >= 3.6.0
+contractions
+transformers
+scikit-learn >= 1.6.1
