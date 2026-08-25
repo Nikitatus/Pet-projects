@@ -37,4 +37,4 @@ For more metrics check the notebook.
 
 ---
 
-Open notebook in Colab: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Nikitatus/Sentiment-Comment-Classification/blob/main/sentiment_classification.ipynb)
+Open notebook in Colab: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Nikitatus/Pet-projects/blob/main/projects/sentiment-classifier/sentiment_classification.ipynb)

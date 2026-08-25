@@ -8,7 +8,7 @@ A collection of machine learning projects and smaller research experiments.
 | --- | --- |
 | [Sentiment classifier](projects/sentiment-classifier/) | Tweet sentiment classification comparing a custom BiLSTM and pretrained transformer models. |
 | [Image upscaling](projects/upscaling-research/) | Evaluation and comparison of image super-resolution models. |
-| [CycleGAN](projects/cyclegan/) | Unpaired image-to-image style transfer with CycleGAN. |
+| [CycleGAN](projects/cyclegan/) | Image-to-image style transfer converting photos into paintings of well-known artists (Van Gogh, Monet). |
 
 ## Experiments
 

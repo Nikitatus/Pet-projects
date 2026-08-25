@@ -2,3 +2,5 @@ Pillow
 streamlit
 torch
 torchvision
+opencv-python
+termcolor
