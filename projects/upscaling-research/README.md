@@ -2,6 +2,8 @@
 
 Here are instructions to setup inference and evaluation of the models for image super-resolution.
 
+Results dataset: [nikita-tkachuk/upscaler-results](https://huggingface.co/datasets/nikita-tkachuk/upscaler-results)
+
 ## Setup Instructions
 
 ### 1. Generating Upscaled Images (Inference)
@@ -67,23 +69,7 @@ Performance logs and metrics for these Docker-based models were captured directl
 
 Link to the original repository: https://github.com/XPixelGroup/TSD-SR
 
-### 2. Publish the comparison dataset to Hugging Face
-
-Uploading the model folders directly makes Hugging Face ImageFolder interpret
-`2x` and `3x` as class labels. To display each model result as its own image
-column, publish the outputs as a typed comparison dataset instead:
-
-```bash
-pip install -r evaluation/requirements.txt
-hf auth login
-python publish_comparison_dataset.py YOUR_USERNAME/YOUR_DATASET_NAME
-```
-
-The dataset viewer will provide two splits, `upscale_2x` and `upscale_3x`.
-Each row represents the same source image and contains these columns:
-`image_id`, `HAT`, `AuraSRv2`, and `TSD-SR`.
-
-### 3. Computing Image Quality Metrics
+### 2. Computing Image Quality Metrics
 
 To compute quantitative evaluation metrics comparing the model outputs back to the original inputs (e.g., for models running locally like AuraSR):
 
